@@ -2,7 +2,7 @@
 
 Name:           python-werkzeug
 Version:        0.12.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        The Swiss Army knife of Python web development 
 
 Group:          Development/Libraries
@@ -14,6 +14,19 @@ Source0:        https://files.pythonhosted.org/packages/source/W/Werkzeug/%{srcn
 Source1:        werkzeug-sphinx-theme.tar.gz
 
 BuildArch:      noarch
+
+# python2 deps
+BuildRequires:  python2-devel
+BuildRequires:  python2-setuptools
+BuildRequires:  python2-sphinx
+#python 3 deps
+BuildRequires:  python%{python3_pkgversion}-devel
+BuildRequires:  python%{python3_pkgversion}-setuptools
+# it will build the docs using python2-sphinx on epel7 for now
+# BuildRequires:  python%{python3_pkgversion}-sphinx
+
+
+
 
 %global _description\
 Werkzeug\
@@ -35,22 +48,15 @@ bulletin boards, etc.).\
 
 
 %description %_description
-
 %package -n python2-werkzeug
 Summary: %summary
 
-BuildRequires:  python2-devel
-BuildRequires:  python2-setuptools
 
 %{?python_provide:%python_provide python2-werkzeug}
 
 %description -n python2-werkzeug %_description
-
 %package -n python2-werkzeug-doc
 Summary:        Documentation for %{name}
-
-BuildRequires:  python2-sphinx
-
 Requires:       python2-werkzeug = %{version}-%{release}
 %{?python_provide:%python_provide python2-werkzeug-doc}
 
@@ -58,26 +64,19 @@ Requires:       python2-werkzeug = %{version}-%{release}
 Documentation and examples for %{name}.
 
 
-%package -n python3-werkzeug
+%package -n python%{python3_pkgversion}-werkzeug
 Summary:        %summary
+%{?python_provide:%python_provide python%{python3_pkgversion}-werkzeug}
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
-
-%{?python_provide:%python_provide python3-werkzeug}
-
-%description -n python3-werkzeug %_description
+%description -n python%{python3_pkgversion}-werkzeug %_description
 
 
-%package -n python3-werkzeug-doc
+%package -n python%{python3_pkgversion}-werkzeug-doc
 Summary:        Documentation for python3-werkzeug
+Requires:       python%{python3_pkgversion}-werkzeug = %{version}-%{release}
+%{?python_provide:%python_provide python%{python3_pkgversion}-werkzeug-doc}
 
-BuildRequires:  python3-sphinx
-
-Requires:       python3-werkzeug = %{version}-%{release}
-%{?python_provide:%python_provide python3-werkzeug-doc}
-
-%description -n python3-werkzeug-doc
+%description -n python%{python3_pkgversion}-werkzeug-doc
 Documentation and examples for python3-werkzeug.
 
 
@@ -135,16 +134,19 @@ popd
 %files -n python2-werkzeug-doc
 %doc docs/_build/html examples
 
-%files -n python3-werkzeug
+%files -n python%{python3_pkgversion}-werkzeug
 %license LICENSE
 %doc AUTHORS PKG-INFO CHANGES
 %{python3_sitelib}/*
 
-%files -n python3-werkzeug-doc
+%files -n python%{python3_pkgversion}-werkzeug-doc
 %doc docs/_build/html examples
 
 
 %changelog
+* Thu Feb 15 2018 Itamar Reis Peixoto <itamar@ispbrasil.com.br> - 0.12.2-3
+- make spec file compatible with epel7
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 0.12.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
